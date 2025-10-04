@@ -46,56 +46,29 @@ sudo npm install -g pm2
 sudo apt install nginx -y
 ```
 
-### 2.5 Install PostgreSQL
-```bash
-sudo apt install postgresql postgresql-contrib -y
-```
+## Step 3: Deploy Backend
 
-## Step 3: Database Setup
-
-### 3.1 Create Database and User
-```bash
-sudo -u postgres psql
-```
-
-```sql
-CREATE DATABASE yugafarms_db;
-CREATE USER yugafarms_user WITH PASSWORD 'YugaFarms2024!Secure';
-GRANT ALL PRIVILEGES ON DATABASE yugafarms_db TO yugafarms_user;
-\c yugafarms_db
-GRANT ALL ON SCHEMA public TO yugafarms_user;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO yugafarms_user;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO yugafarms_user;
-\q
-```
-
-## Step 4: Deploy Backend
-
-### 4.1 Clone Repository
+### 3.1 Clone Repository
 ```bash
 cd /home/ubuntu
 git clone https://github.com/your-username/YugaFarms.git
 cd YugaFarms/YugaFarmsBackend
 ```
 
-### 4.2 Install Dependencies
+### 3.2 Install Dependencies
 ```bash
 npm install
 ```
 
-### 4.3 Create Production Environment File
+### 3.3 Create Production Environment File
 ```bash
 nano .env
 ```
 
 ```env
-# Database Configuration
-DATABASE_CLIENT=postgres
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=yugafarms_db
-DATABASE_USERNAME=yugafarms_user
-DATABASE_PASSWORD=YugaFarms2024!Secure
+# Database Configuration (SQLite - Default)
+DATABASE_CLIENT=sqlite
+DATABASE_FILENAME=.tmp/data.db
 
 # Server Configuration
 HOST=0.0.0.0
@@ -120,9 +93,9 @@ EMAIL_FROM_NAME=YugaFarms
 EMAIL_REPLY_TO=support@yugafarms.com
 ```
 
-## Step 5: Configure Nginx
+## Step 4: Configure Nginx
 
-### 5.1 Create Nginx Configuration
+### 4.1 Create Nginx Configuration
 ```bash
 sudo nano /etc/nginx/sites-available/api.yugafarms.com
 ```
@@ -193,16 +166,16 @@ server {
 }
 ```
 
-### 5.2 Enable Site
+### 4.2 Enable Site
 ```bash
 sudo ln -s /etc/nginx/sites-available/api.yugafarms.com /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-## Step 6: Start Backend with PM2
+## Step 5: Start Backend with PM2
 
-### 6.1 Create PM2 Configuration
+### 5.1 Create PM2 Configuration
 ```bash
 cd /home/ubuntu/YugaFarms
 nano ecosystem-backend.config.js
@@ -233,7 +206,7 @@ module.exports = {
 };
 ```
 
-### 6.2 Start Backend
+### 5.2 Start Backend
 ```bash
 # Create logs directory
 mkdir -p logs
@@ -248,27 +221,27 @@ pm2 save
 pm2 startup
 ```
 
-## Step 7: Setup SSL Certificate
+## Step 6: Setup SSL Certificate
 
-### 7.1 Install Certbot
+### 6.1 Install Certbot
 ```bash
 sudo apt install certbot python3-certbot-nginx -y
 ```
 
-### 7.2 Get SSL Certificate
+### 6.2 Get SSL Certificate
 ```bash
 sudo certbot --nginx -d api.yugafarms.com
 ```
 
-## Step 8: Configure DNS
+## Step 7: Configure DNS
 
-### 8.1 DNS Settings
+### 7.1 DNS Settings
 In your domain registrar (where yugafarms.com is registered):
 - **A Record**: api.yugafarms.com → Your EC2 Public IP
 
-## Step 9: Test Deployment
+## Step 8: Test Deployment
 
-### 9.1 Test Endpoints
+### 8.1 Test Endpoints
 ```bash
 # Test API
 curl https://api.yugafarms.com/api/products
@@ -277,20 +250,20 @@ curl https://api.yugafarms.com/api/products
 curl https://api.yugafarms.com/admin
 ```
 
-### 9.2 Access Admin Panel
+### 8.2 Access Admin Panel
 1. Visit: `https://api.yugafarms.com/admin`
 2. Create admin account
 3. Configure content types and permissions
 
-## Step 10: Update Frontend Configuration
+## Step 9: Update Frontend Configuration
 
-### 10.1 Update Frontend Environment
+### 9.1 Update Frontend Environment
 In your local frontend `.env.local`:
 ```env
 NEXT_PUBLIC_BACKEND=https://api.yugafarms.com/api
 ```
 
-### 10.2 Test Frontend Connection
+### 9.2 Test Frontend Connection
 Make sure your frontend can connect to the backend API.
 
 ## Monitoring and Maintenance
@@ -310,9 +283,10 @@ sudo systemctl restart nginx  # Restart Nginx
 sudo nginx -t                 # Test Nginx configuration
 ```
 
-### Database Backup
+### Database Backup (SQLite)
 ```bash
-pg_dump -h localhost -U yugafarms_user yugafarms_db > backup.sql
+# Backup SQLite database
+cp YugaFarmsBackend/.tmp/data.db backup-$(date +%Y%m%d).db
 ```
 
 ## Security Checklist
@@ -335,8 +309,8 @@ pm2 logs yugafarms-backend
 
 ### Database connection issues?
 ```bash
-sudo systemctl status postgresql
-sudo -u postgres psql -c "SELECT version();"
+# Check if SQLite database file exists
+ls -la YugaFarmsBackend/.tmp/data.db
 ```
 
 ### Nginx issues?

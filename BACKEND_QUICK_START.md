@@ -24,13 +24,7 @@ chmod +x deploy-backend.sh setup-backend-database.sh
 ./deploy-backend.sh
 ```
 
-### Step 3: Setup Database
-```bash
-# Run database setup
-./setup-backend-database.sh
-```
-
-### Step 4: Configure Backend Environment
+### Step 3: Configure Backend Environment
 ```bash
 cd YugaFarmsBackend
 nano .env
@@ -38,13 +32,9 @@ nano .env
 
 Paste this configuration:
 ```env
-# Database Configuration
-DATABASE_CLIENT=postgres
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=yugafarms_db
-DATABASE_USERNAME=yugafarms_user
-DATABASE_PASSWORD=YugaFarms2024!Secure
+# Database Configuration (SQLite - Default)
+DATABASE_CLIENT=sqlite
+DATABASE_FILENAME=.tmp/data.db
 
 # Server Configuration
 HOST=0.0.0.0
@@ -63,7 +53,7 @@ RAZORPAY_KEY_ID=rzp_live_RPLaE4n5TwcMVj
 RAZORPAY_KEY_SECRET=your_razorpay_key_secret_here
 ```
 
-### Step 5: Configure Nginx
+### Step 4: Configure Nginx
 ```bash
 sudo nano /etc/nginx/sites-available/api.yugafarms.com
 ```
@@ -133,7 +123,7 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-### Step 6: Start Backend
+### Step 5: Start Backend
 ```bash
 # Start with PM2
 pm2 start ecosystem-backend.config.js
@@ -145,7 +135,7 @@ pm2 save
 pm2 startup
 ```
 
-### Step 7: Setup SSL
+### Step 6: Setup SSL
 ```bash
 # Install Certbot
 sudo apt install certbot python3-certbot-nginx -y
@@ -154,7 +144,7 @@ sudo apt install certbot python3-certbot-nginx -y
 sudo certbot --nginx -d api.yugafarms.com
 ```
 
-### Step 8: Configure DNS
+### Step 7: Configure DNS
 Point your subdomain to your EC2 instance:
 - **A Record**: api.yugafarms.com → Your EC2 Public IP
 
