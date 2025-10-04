@@ -572,14 +572,14 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     razorpayPaymentId: Schema.Attribute.String;
     razorpaySignature: Schema.Attribute.String;
     transaction_status: Schema.Attribute.Enumeration<
-      ['PENDING', 'SUCCESS', 'FAILED', 'REFUNDED']
+      ['PENDING', 'SUCCESS', 'FAILED', 'REFUNDED', 'CANCELLED']
     > &
       Schema.Attribute.DefaultTo<'PENDING'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
