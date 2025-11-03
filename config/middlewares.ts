@@ -2,6 +2,13 @@ export default [
   'strapi::logger',
   'strapi::errors',
   {
+    name: 'strapi::cors',
+    config: {
+      origin: ['https://yugafarms.com'],
+      headers: '*',
+    },
+  },
+  {
     name: 'strapi::security',
     config: {
       contentSecurityPolicy: {
