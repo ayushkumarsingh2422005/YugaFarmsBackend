@@ -1,0 +1,98 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "orders"
+    },
+    "items": {
+      "type": "json",
+      "required": true
+    },
+    "shippingAddress": {
+      "type": "json",
+      "required": true
+    },
+    "billingAddress": {
+      "type": "json"
+    },
+    "subtotal": {
+      "type": "decimal",
+      "required": true
+    },
+    "tax": {
+      "type": "decimal",
+      "required": true
+    },
+    "shipping": {
+      "type": "decimal",
+      "required": true
+    },
+    "total": {
+      "type": "decimal",
+      "required": true
+    },
+    "paymentMethod": {
+      "type": "enumeration",
+      "required": true,
+      "default": "COD",
+      "enum": [
+        "COD",
+        "RAZORPAY"
+      ]
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "required": true,
+      "default": "PENDING",
+      "enum": [
+        "PENDING",
+        "PAID",
+        "FAILED",
+        "REFUNDED"
+      ]
+    },
+    "orderStatus": {
+      "type": "enumeration",
+      "required": true,
+      "default": "PENDING",
+      "enum": [
+        "PENDING",
+        "CONFIRMED",
+        "PROCESSING",
+        "SHIPPED",
+        "DELIVERED",
+        "CANCELLED"
+      ]
+    },
+    "razorpayOrderId": {
+      "type": "string"
+    },
+    "razorpayPaymentId": {
+      "type": "string"
+    },
+    "razorpaySignature": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

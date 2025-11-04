@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true
+    },
+    "Description": {
+      "type": "text",
+      "required": true
+    },
+    "Rating": {
+      "type": "integer",
+      "required": true,
+      "default": 5,
+      "min": 0,
+      "max": 5
+    },
+    "PunchLine": {
+      "type": "string",
+      "required": true
+    },
+    "NumberOfPurchase": {
+      "type": "integer",
+      "default": 0
+    },
+    "Variants": {
+      "type": "component",
+      "component": "product-variant.product-variant",
+      "repeatable": true,
+      "required": true
+    },
+    "Tags": {
+      "type": "component",
+      "component": "tag.tag",
+      "repeatable": true
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "Type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Ghee",
+      "enum": [
+        "Ghee",
+        "Honey"
+      ]
+    }
+  }
+}
