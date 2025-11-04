@@ -15,16 +15,13 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.24.1",
-    "@strapi/plugin-users-permissions": "5.24.1",
-    "@strapi/provider-upload-aws-s3": "^5.25.0",
-    "@strapi/strapi": "5.24.1",
+    "@strapi/plugin-cloud": "5.30.0",
+    "@strapi/plugin-users-permissions": "5.30.0",
+    "@strapi/strapi": "5.30.0",
     "better-sqlite3": "11.3.0",
-    "razorpay": "^2.9.6",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
-    "strapi-provider-email-brevo": "^1.0.4",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
@@ -38,7 +35,7 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "0feee416-ace8-47a7-9f97-3c8af19ddee6",
-    "installId": "0f3c10dda10b6f85f799e7c3a04c0d159294a2d2fb7a3c9fb72c880fd72893ca"
+    "uuid": "83111699-b239-40b8-b63a-f3fc3839442b",
+    "installId": "a516e34f3ac29fb569e64e73cf6baf1b420c49c007d54e1a2a3f7a2fd9f5ee73"
   }
 }
