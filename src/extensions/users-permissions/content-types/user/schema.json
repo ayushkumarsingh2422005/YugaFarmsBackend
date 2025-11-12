@@ -24,7 +24,7 @@
       "type": "email",
       "minLength": 6,
       "configurable": false,
-      "required": true
+      "required": false
     },
     "provider": {
       "type": "string",
@@ -35,7 +35,8 @@
       "minLength": 6,
       "configurable": false,
       "private": true,
-      "searchable": false
+      "searchable": false,
+      "required": false
     },
     "resetPasswordToken": {
       "type": "string",
@@ -79,26 +80,30 @@
       "mappedBy": "user"
     },
     "Phone": {
-      "type": "integer"
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "minLength": 10,
+      "maxLength": 15
     },
     "AddressLine1": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "AddressLine2": {
       "type": "string"
     },
     "City": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "State": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "Pin": {
       "type": "integer",
-      "required": true,
+      "required": false,
       "min": 100000,
       "max": 999999
     },

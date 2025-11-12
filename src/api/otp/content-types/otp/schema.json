@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "otps",
+  "info": {
+    "singularName": "otp",
+    "pluralName": "otps",
+    "displayName": "OTP"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "phone": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 15,
+      "required": true
+    },
+    "code": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 6,
+      "required": true
+    },
+    "expiresAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "isUsed": {
+      "type": "boolean",
+      "default": false
+    },
+    "attempts": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "max": 5
+    }
+  }
+}
