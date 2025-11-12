@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "clients",
+  "info": {
+    "singularName": "client",
+    "pluralName": "clients",
+    "displayName": "Client"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "Review": {
+      "type": "text",
+      "required": true
+    },
+    "Rating": {
+      "type": "integer",
+      "required": true,
+      "default": 5,
+      "min": 0,
+      "max": 5
+    },
+    "Designation": {
+      "type": "string"
+    }
+  }
+}
