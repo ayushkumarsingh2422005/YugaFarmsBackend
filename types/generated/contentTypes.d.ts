@@ -500,6 +500,38 @@ export interface ApiClientClient extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiInquireInquire extends Struct.CollectionTypeSchema {
+  collectionName: 'inquires';
+  info: {
+    displayName: 'Inquire';
+    pluralName: 'inquires';
+    singularName: 'inquire';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Email: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inquire.inquire'
+    > &
+      Schema.Attribute.Private;
+    Messages: Schema.Attribute.Text & Schema.Attribute.Required;
+    Name: Schema.Attribute.String & Schema.Attribute.Required;
+    Phone: Schema.Attribute.Integer & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    Subject: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   collectionName: 'orders';
   info: {
@@ -646,6 +678,9 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<5>;
     Tags: Schema.Attribute.Component<'tag.tag', true>;
     Title: Schema.Attribute.String & Schema.Attribute.Required;
+    TopPicks: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     Type: Schema.Attribute.Enumeration<['Ghee', 'Honey']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Ghee'>;
@@ -1242,6 +1277,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::banner.banner': ApiBannerBanner;
       'api::client.client': ApiClientClient;
+      'api::inquire.inquire': ApiInquireInquire;
       'api::order.order': ApiOrderOrder;
       'api::otp.otp': ApiOtpOtp;
       'api::product.product': ApiProductProduct;

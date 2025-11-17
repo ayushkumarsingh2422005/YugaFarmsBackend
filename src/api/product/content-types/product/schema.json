@@ -61,6 +61,11 @@
         "Ghee",
         "Honey"
       ]
+    },
+    "TopPicks": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   }
 }

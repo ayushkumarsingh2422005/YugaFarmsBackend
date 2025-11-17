@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "inquires",
+  "info": {
+    "singularName": "inquire",
+    "pluralName": "inquires",
+    "displayName": "Inquire"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string",
+      "required": true
+    },
+    "Email": {
+      "type": "string"
+    },
+    "Phone": {
+      "type": "integer",
+      "required": true
+    },
+    "Subject": {
+      "type": "string",
+      "required": true
+    },
+    "Messages": {
+      "type": "text",
+      "required": true
+    }
+  }
+}
