@@ -26,8 +26,8 @@ export default factories.createCoreController('api::otp.otp', ({ strapi }) => ({
       const otpService = strapi.service('api::otp.otp');
       const code = await otpService.createOTP(cleanPhone);
 
-      // Send SMS via Brevo
-      const sent = await otpService.sendSMS(cleanPhone, code);
+      // Send SMS via Brevo - pass original phone to preserve format for logging
+      const sent = await otpService.sendSMS(phone, code);
       
       if (!sent) {
         return ctx.internalServerError('Failed to send OTP');

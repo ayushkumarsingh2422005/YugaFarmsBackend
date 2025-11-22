@@ -128,6 +128,20 @@ export default factories.createCoreService('api::otp.otp', ({ strapi }) => ({
       // Example: +33680065433 becomes 33680065433
       const cleanPhone = phone.replace(/\D/g, '');
       
+      // Format phone for logging - ensure it has +91 prefix correctly
+      // If cleanPhone already starts with 91, just add +; otherwise add +91
+      let logPhone: string;
+      if (cleanPhone.startsWith('91') && cleanPhone.length >= 12) {
+        // Phone already has country code 91, just add +
+        logPhone = `+${cleanPhone}`;
+      } else if (cleanPhone.length === 10) {
+        // 10-digit number, add +91 prefix
+        logPhone = `+91${cleanPhone}`;
+      } else {
+        // Use as is with + prefix if it was provided, otherwise add +
+        logPhone = phone.startsWith('+') ? phone : `+${cleanPhone}`;
+      }
+      
       // Create SMS message
       const message = `Your YugaFarms OTP is: ${code}. Valid for 10 minutes. Do not share this code with anyone.`;
       
@@ -136,13 +150,15 @@ export default factories.createCoreService('api::otp.otp', ({ strapi }) => ({
         sender: senderName,
         recipient: cleanPhone,
         content: message,
-        type: 'transactional', // Use 'transactional' for OTP, 'marketing' for promotions
-        // Optional fields (uncomment if needed):
-        // tag: 'otp-verification',
-        // webUrl: '', // Optional webhook URL
-        // unicodeEnabled: true, // Enable if sending in non-Latin scripts
-        // organisationPrefix: 'YugaFarms', // Optional organization prefix
+        type: 'marketing', // Using 'marketing' as per working curl example
+        unicodeEnabled: true, // Enable for better character support
+        organisationPrefix: 'YugaFarms', // Organization prefix
       };
+
+      // Log the request being sent (without API key)
+      strapi.log.info('Sending SMS to Brevo:', {
+        ...requestBody
+      });
 
       // Make API request to Brevo
       const response = await fetch('https://api.brevo.com/v3/transactionalSMS/send', {
@@ -150,13 +166,33 @@ export default factories.createCoreService('api::otp.otp', ({ strapi }) => ({
         headers: {
           'accept': 'application/json',
           'api-key': apiKey,
-          'content-type': 'application/json',
+          'content-type': 'application/json'
         },
         body: JSON.stringify(requestBody),
       });
 
-      // Parse response
-      const responseData = await response.json();
+      // Get response text first to see what we're actually getting
+      const responseText = await response.text();
+      let responseData: any;
+      
+      try {
+        responseData = JSON.parse(responseText);
+      } catch (e) {
+        strapi.log.error('Failed to parse Brevo response as JSON:', {
+          status: response.status,
+          statusText: response.statusText,
+          responseText: responseText,
+        });
+        return false;
+      }
+
+      // Log full response from Brevo
+      strapi.log.info('=== Brevo SMS API Response ===', {
+        status: response.status,
+        statusText: response.statusText,
+        response: responseData,
+        fullResponse: JSON.stringify(responseData, null, 2),
+      });
 
       if (!response.ok) {
         strapi.log.error('Brevo SMS API Error:', {
@@ -167,11 +203,22 @@ export default factories.createCoreService('api::otp.otp', ({ strapi }) => ({
         return false;
       }
 
-      // Log success (optional - remove in production if sensitive)
-      const messageId = (responseData as any)?.messageId || (responseData as any)?.id;
-      strapi.log.info(`OTP SMS sent successfully to ${cleanPhone}`, {
+      // Check if response indicates success
+      const messageId = responseData?.messageId || responseData?.id;
+      if (!messageId) {
+        strapi.log.error('Brevo response missing messageId. Full response:', JSON.stringify(responseData, null, 2));
+        return false;
+      }
+
+      // Log success with formatted phone number (with +91 prefix) and full response
+      strapi.log.info(`✅ OTP SMS sent successfully to ${logPhone}`, {
         messageId: messageId,
+        recipient: cleanPhone,
+        brevoResponse: responseData,
       });
+      
+      // Also log the response in a more readable format
+      strapi.log.info(`Brevo Response: ${JSON.stringify(responseData)}`);
 
       return true;
     } catch (error) {
