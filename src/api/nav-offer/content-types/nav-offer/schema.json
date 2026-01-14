@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_offers",
+  "info": {
+    "singularName": "nav-offer",
+    "pluralName": "nav-offers",
+    "displayName": "Nav Offer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Text": {
+      "type": "string",
+      "required": true
+    },
+    "Url": {
+      "type": "string"
+    }
+  }
+}
