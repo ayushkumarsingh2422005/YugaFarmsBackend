@@ -27,9 +27,9 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
       data.paymentStatus = 'PENDING';
     }
 
-    // Set default order status
+    // Set default order status for customer checkout flow
     if (!data.orderStatus) {
-      data.orderStatus = 'PENDING';
+      data.orderStatus = 'CONFIRMED';
     }
 
     // Ensure user is set

@@ -61,7 +61,7 @@
     "paymentStatus": {
       "type": "enumeration",
       "required": true,
-      "default": "PENDING",
+      "default": "CONFIRMED",
       "enum": [
         "PENDING",
         "PAID",
