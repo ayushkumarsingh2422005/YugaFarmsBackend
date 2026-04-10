@@ -1230,6 +1230,7 @@ export interface PluginUsersPermissionsUser
     AddressLine2: Schema.Attribute.String;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     cart: Schema.Attribute.JSON;
+    cartHasItems: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     City: Schema.Attribute.String;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

@@ -109,6 +109,11 @@
     },
     "cart": {
       "type": "json"
+    },
+    "cartHasItems": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 }
