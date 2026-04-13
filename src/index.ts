@@ -1,3 +1,4 @@
+import type { Context } from 'koa';
 import type { Core } from '@strapi/strapi';
 
 const USER_UID = 'plugin::users-permissions.user' as const;
@@ -50,6 +51,30 @@ export default {
    * run jobs, or perform some special logic.
    */
   bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    // Meta catalog feed at site root (not under /api). Content API is mounted at /api, so
+    // /api/catalog_products.csv would also work if registered there; this matches common feed URLs.
+    const catalogCsvHandler = async (ctx: Context) => {
+      const ctrl = strapi.controller('api::product.product') as {
+        catalogCsv: (c: Context) => Promise<void>;
+      };
+      await ctrl.catalogCsv(ctx);
+    };
+
+    strapi.server.routes([
+      {
+        method: 'GET',
+        path: '/catalog_products.csv',
+        handler: catalogCsvHandler,
+        config: { auth: false, policies: [], middlewares: [] },
+      },
+      {
+        method: 'GET',
+        path: '/api/catalog_products.csv',
+        handler: catalogCsvHandler,
+        config: { auth: false, policies: [], middlewares: [] },
+      },
+    ]);
+
     // Clean up expired OTPs periodically (optional)
     setInterval(async () => {
       try {
