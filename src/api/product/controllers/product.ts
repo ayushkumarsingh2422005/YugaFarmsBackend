@@ -93,24 +93,6 @@ export default factories.createCoreController('api::product.product', ({ strapi 
       } as Record<string, boolean>,
     });
 
-    // In some environments, storefront links may use a newer product numeric id
-    // than the "live" row id. Build a title->id map from published preview rows
-    // and prefer that id for the feed link.
-    const previewRows = await strapi.entityService.findMany('api::product.product', {
-      publicationState: 'preview',
-      fields: ['id', 'Title', 'publishedAt'],
-      sort: { id: 'desc' },
-    });
-
-    const canonicalIdByTitle = new Map<string, number>();
-    for (const row of previewRows as Array<{ id: number; Title?: string; publishedAt?: string | null }>) {
-      const title = row.Title?.trim();
-      if (!title || !row.publishedAt) continue;
-      if (!canonicalIdByTitle.has(title)) {
-        canonicalIdByTitle.set(title, row.id);
-      }
-    }
-
     const lines: string[] = [csvRow([...META_CATALOG_HEADERS])];
 
     for (const product of products as Array<{
@@ -133,8 +115,7 @@ export default factories.createCoreController('api::product.product', ({ strapi 
 
       const firstImage = product.Image?.[0];
       const imageLink = absoluteMediaUrl(strapiPublic, firstImage?.url);
-      const canonicalId = canonicalIdByTitle.get((product.Title || '').trim()) || product.id;
-      const productLink = `${storefrontUrl}/product/${canonicalId}`;
+      const productLink = `${storefrontUrl}/product/${product.id}`;
       const desc = product.Description || '';
       const itemGroupId = String(product.id);
       const tag0 = product.Tags?.[0]?.Value ?? '';
