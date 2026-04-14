@@ -80,41 +80,6 @@ type CatalogProduct = {
   Tags?: Array<{ Value?: string }>;
 };
 
-/**
- * Pull products through the same public API shape used by frontend listing pages.
- * This guarantees catalog links use the same IDs users can open on `/product/:id`.
- */
-async function fetchFrontendVisibleProducts(baseUrl: string): Promise<CatalogProduct[]> {
-  const normalizedBase = baseUrl.replace(/\/$/, '');
-  const results: CatalogProduct[] = [];
-  const pageSize = 100;
-  let page = 1;
-
-  while (true) {
-    const url =
-      `${normalizedBase}/api/products?populate=*` +
-      `&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`catalogCsv failed to fetch public products: ${res.status}`);
-    }
-    const json = (await res.json()) as {
-      data?: CatalogProduct[];
-      meta?: { pagination?: { pageCount?: number } };
-    };
-
-    const pageRows = json.data || [];
-    if (pageRows.length === 0) break;
-    results.push(...pageRows);
-
-    const pageCount = json.meta?.pagination?.pageCount || 1;
-    if (page >= pageCount) break;
-    page += 1;
-  }
-
-  return results;
-}
-
 export default factories.createCoreController('api::product.product', ({ strapi }) => ({
   async catalogCsv(ctx) {
     const storefrontUrl = (
@@ -135,7 +100,35 @@ export default factories.createCoreController('api::product.product', ({ strapi 
       (process.env.STRAPI_PUBLIC_URL || process.env.PUBLIC_URL || '').replace(/\/$/, '') ||
       `${protocol}://${host}`;
 
-    const products = await fetchFrontendVisibleProducts(strapiPublic);
+    // Match storefront listing filters (Type + TopPicks=false) without internal HTTP calls.
+    const [gheeProducts, honeyProducts] = await Promise.all([
+      strapi.entityService.findMany('api::product.product', {
+        publicationState: 'live',
+        filters: {
+          Type: { $eq: 'Ghee' },
+          TopPicks: { $eq: false },
+        },
+        populate: {
+          Image: true,
+          Variants: true,
+          Tags: true,
+        } as Record<string, boolean>,
+      }),
+      strapi.entityService.findMany('api::product.product', {
+        publicationState: 'live',
+        filters: {
+          Type: { $eq: 'Honey' },
+          TopPicks: { $eq: false },
+        },
+        populate: {
+          Image: true,
+          Variants: true,
+          Tags: true,
+        } as Record<string, boolean>,
+      }),
+    ]);
+    const products = [...(gheeProducts as CatalogProduct[]), ...(honeyProducts as CatalogProduct[])]
+      .sort((a, b) => a.id - b.id);
 
     const lines: string[] = [csvRow([...META_CATALOG_HEADERS])];
 
