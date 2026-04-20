@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "customer_events",
+  "info": {
+    "singularName": "customer-event",
+    "pluralName": "customer-events",
+    "displayName": "Customer Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "customer_events"
+    },
+    "eventName": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "cart",
+        "checkout"
+      ]
+    },
+    "occurredAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "path": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "json"
+    }
+  }
+}

@@ -81,10 +81,10 @@
     },
     "Phone": {
       "type": "string",
-      "required": true,
-      "unique": true,
       "minLength": 10,
-      "maxLength": 15
+      "maxLength": 15,
+      "required": true,
+      "unique": true
     },
     "AddressLine1": {
       "type": "string",
@@ -112,8 +112,14 @@
     },
     "cartHasItems": {
       "type": "boolean",
-      "default": false,
-      "required": false
+      "required": false,
+      "default": false
+    },
+    "customer_events": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::customer-event.customer-event",
+      "mappedBy": "user"
     }
   }
 }

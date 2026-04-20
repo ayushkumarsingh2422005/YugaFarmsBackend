@@ -527,6 +527,39 @@ export interface ApiCouponCoupon extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCustomerEventCustomerEvent extends Struct.CollectionTypeSchema {
+  collectionName: 'customer_events';
+  info: {
+    displayName: 'Customer Event';
+    pluralName: 'customer-events';
+    singularName: 'customer-event';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    eventName: Schema.Attribute.Enumeration<['cart', 'checkout']> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::customer-event.customer-event'
+    > &
+      Schema.Attribute.Private;
+    occurredAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    path: Schema.Attribute.String;
+    payload: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+  };
+}
+
 export interface ApiInquireInquire extends Struct.CollectionTypeSchema {
   collectionName: 'inquires';
   info: {
@@ -1231,6 +1264,10 @@ export interface PluginUsersPermissionsUser
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     cart: Schema.Attribute.JSON;
     cartHasItems: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    customer_events: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::customer-event.customer-event'
+    >;
     City: Schema.Attribute.String;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1306,6 +1343,7 @@ declare module '@strapi/strapi' {
       'api::banner.banner': ApiBannerBanner;
       'api::client.client': ApiClientClient;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::customer-event.customer-event': ApiCustomerEventCustomerEvent;
       'api::inquire.inquire': ApiInquireInquire;
       'api::order.order': ApiOrderOrder;
       'api::otp.otp': ApiOtpOtp;
