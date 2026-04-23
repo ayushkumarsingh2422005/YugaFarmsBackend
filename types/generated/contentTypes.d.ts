@@ -541,7 +541,7 @@ export interface ApiCustomerEventCustomerEvent extends Struct.CollectionTypeSche
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    eventName: Schema.Attribute.Enumeration<['cart', 'checkout']> &
+    eventName: Schema.Attribute.Enumeration<['cart', 'checkout', 'paymentbutton']> &
       Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

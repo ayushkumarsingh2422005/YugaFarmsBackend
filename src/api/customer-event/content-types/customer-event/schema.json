@@ -22,7 +22,8 @@
       "required": true,
       "enum": [
         "cart",
-        "checkout"
+        "checkout",
+        "paymentbutton"
       ]
     },
     "occurredAt": {

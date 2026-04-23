@@ -21,7 +21,8 @@ export default factories.createCoreController('api::customer-event.customer-even
     };
     const data = (body.data || body) as Record<string, unknown>;
     const eventName = data.eventName as string | undefined;
-    if (eventName !== 'cart' && eventName !== 'checkout') {
+    const validEventNames = new Set(['cart', 'checkout', 'paymentbutton']);
+    if (!eventName || !validEventNames.has(eventName)) {
       return ctx.badRequest('Invalid eventName');
     }
 
