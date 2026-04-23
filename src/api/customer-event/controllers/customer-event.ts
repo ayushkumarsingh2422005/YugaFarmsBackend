@@ -69,6 +69,25 @@ export default factories.createCoreController('api::customer-event.customer-even
       data: createData as any,
     });
 
+    if (userId && (eventName === 'cart' || eventName === 'checkout')) {
+      const currentUser = await strapi.entityService.findOne('plugin::users-permissions.user', userId, {
+        fields: ['CartEventCount', 'CheckoutEventCount'] as any,
+      }) as {
+        CartEventCount?: number | null;
+        CheckoutEventCount?: number | null;
+      } | null;
+
+      const cartCount = Number(currentUser?.CartEventCount ?? 0);
+      const checkoutCount = Number(currentUser?.CheckoutEventCount ?? 0);
+
+      await strapi.entityService.update('plugin::users-permissions.user', userId, {
+        data: {
+          CartEventCount: eventName === 'cart' ? cartCount + 1 : cartCount,
+          CheckoutEventCount: eventName === 'checkout' ? checkoutCount + 1 : checkoutCount,
+        } as any,
+      });
+    }
+
     return ctx.send({ data: { id: created.id } });
   },
 }));

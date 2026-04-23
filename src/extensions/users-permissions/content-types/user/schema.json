@@ -115,11 +115,33 @@
       "required": false,
       "default": false
     },
+    "addToCartCount": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "min": 0
+    },
+    "initiateCheckoutCount": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "min": 0
+    },
     "customer_events": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::customer-event.customer-event",
       "mappedBy": "user"
+    },
+    "CartEventCount": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "CheckoutEventCount": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     }
   }
 }
