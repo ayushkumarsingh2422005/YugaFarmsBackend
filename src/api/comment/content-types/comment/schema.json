@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comments",
+  "info": {
+    "singularName": "comment",
+    "pluralName": "comments",
+    "displayName": "Comment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Comment": {
+      "type": "string"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "Type": {
+      "type": "enumeration",
+      "default": "Common",
+      "required": true,
+      "enum": [
+        "Common",
+        "Ghee",
+        "Honey"
+      ]
+    },
+    "Rating": {
+      "type": "integer",
+      "min": 0,
+      "max": 5
+    }
+  }
+}

@@ -15,12 +15,16 @@
       "type": "string",
       "required": true
     },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
     "Description": {
       "type": "text",
       "required": true
     },
     "Rating": {
-      "type": "integer",
+      "type": "decimal",
       "required": true,
       "default": 5,
       "min": 0,
@@ -66,6 +70,9 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "Order": {
+      "type": "integer"
     }
   }
 }

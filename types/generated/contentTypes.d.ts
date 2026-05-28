@@ -736,6 +736,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<5>;
+    slug: Schema.Attribute.UID<'Title'>;
     Tags: Schema.Attribute.Component<'tag.tag', true>;
     Title: Schema.Attribute.String & Schema.Attribute.Required;
     TopPicks: Schema.Attribute.Boolean &
