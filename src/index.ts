@@ -1,5 +1,6 @@
 import type { Context } from 'koa';
 import type { Core } from '@strapi/strapi';
+import profileController from './api/profile/controllers/profile';
 
 const USER_UID = 'plugin::users-permissions.user' as const;
 const CART_BACKFILL_STORE_KEY = 'cart_has_items_backfill_v1';
@@ -71,6 +72,12 @@ export default {
         method: 'GET',
         path: '/api/catalog_products.csv',
         handler: catalogCsvHandler,
+        config: { auth: false, policies: [], middlewares: [] },
+      },
+      {
+        method: 'PUT',
+        path: '/api/profile/me',
+        handler: (ctx: Context) => profileController.updateMe(ctx),
         config: { auth: false, policies: [], middlewares: [] },
       },
     ]);
