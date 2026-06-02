@@ -80,6 +80,28 @@ export default {
         handler: (ctx: Context) => profileController.updateMe(ctx),
         config: { auth: false, policies: [], middlewares: [] },
       },
+      {
+        method: 'POST',
+        path: '/api/orders/razorpay-intent',
+        handler: async (ctx: Context) => {
+          const ctrl = strapi.controller('api::order.order') as {
+            createRazorpayIntent: (c: Context) => Promise<void>;
+          };
+          await ctrl.createRazorpayIntent(ctx);
+        },
+        config: { auth: false, policies: [], middlewares: [] },
+      },
+      {
+        method: 'POST',
+        path: '/api/orders/razorpay-confirm',
+        handler: async (ctx: Context) => {
+          const ctrl = strapi.controller('api::order.order') as {
+            confirmRazorpayPayment: (c: Context) => Promise<void>;
+          };
+          await ctrl.confirmRazorpayPayment(ctx);
+        },
+        config: { auth: false, policies: [], middlewares: [] },
+      },
     ]);
 
     // Clean up expired OTPs periodically (optional)
